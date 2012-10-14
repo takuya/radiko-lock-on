@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+	<head>
+		<title><%=title%></title>
+		<script src="./static/jquery.js"></script>
+	<style type="text/css">
+	body{
+		width:2400px;
+		height:4800px;
+	}
+		div.channel{
+			float:left;
+		}
+		div.channel_name{
+			width: 100%;
+			text-align: center;
+			background-color: #ffa07a;
+			color:#f2eeef;
+		}
+		div.program_list{
+			height: 200px;
+			width:   198px;
+			font-size:10px;
+			margin-left: 1px;
+
+		}
+		div.hour{
+			height: 200px;
+			font-size:25px;
+			text-align:right;
+			padding-right:5px;
+			outline: 1px solid #ffa07a;
+			background-color:#dddddd;
+		
+		}
+		div.program{
+			outline: 1px solid #ffa07a;
+			overflow: hidden; 
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+		div.info{
+			display: none;
+			overflow: hidden; 
+		}
+		div.desc{
+			display: none;
+			overflow: hidden; 
+		}
+		div.start_time{
+			overflow: hidden;
+			width:30px;
+			float: left;
+		}
+		div.title{
+			overflow: hidden; 
+			text-overflow: ellipsis;
+			overflow: hidden; 
+			font-size: 13px;
+			width: 168px;
+			background-color: #f2eeef;
+		}
+		div.sub_title{
+			display: inline;
+		}
+		div.performer{
+			overflow: hidden; 
+			text-overflow: ellipsis;
+			clear: both;
+			white-space: nowrap;
+		}
+		div.reserved{
+			background-color: #eebfbf;
+		}
+	</style>
+	<script>
+		var load_reserved = function(){
+				$.ajax({
+					  	type: "GET",
+					     url: "./reserve/"+$("div#program_date").text()+".json"
+						  }).done(function( msg ) {
+						    console.log( msg );
+						    var list;
+							src ="  list = "+ msg;
+							eval(src)
+							$.each(list,function(i,e){ $("div.title:contains('"+e["title"]+"')").parent().toggleClass("reserved",true)  })
+						});
+		
+		}
+		$(document).ready(function(){
+			//スクロール
+			<% e = Time.now.hour - 5 ;  %>
+			<% e = e+24  if e <=0 %>
+			var offset = $($("div.hour").get(<%=e%>)).offset()["top"]
+			$($.browser.webkit ? 'body' : 'html').animate({ scrollTop: offset }, function(){} );
+			//予約済み一覧
+			load_reserved();
+
+
+
+
+			//予約ボタン
+			$("div.program").click(function(e){ 
+
+				data = {
+				"duration" : $(this).attr("dur"),
+				"channel"  :$(this).parents("div.channel").attr('id'),
+				"start_at" :$(this).attr("start_at"),
+				"title" :$(this).find("div.title").text()
+				}
+
+				end_point_url = ($(this).hasClass("reserved")) ?  "./cancel_reserve" :"./reserve";
+				//console.log($(this))
+				//console.log($(this).hasClass("reserved"))
+				var _this = $(this)
+				$.ajax({
+					  	type: "POST",
+						url: end_point_url ,
+						  data: data
+						  }).done(function( msg ) {
+						 	 //console.log(msg)
+							 _this.toggleClass("reserved")
+						});
+
+				 })
+			
+		});
+	
+	</script>
+
+	</head>
+	<body>
+		<div id=main>
+			<div id=header>
+				<div id="program_date"><%= day %></div>
+				<div id="brdcrb" ><a href="./rec_list">録音済みリスト</a></div>
+				<!-- <input type=button onclick=test() value="ロード" /> --> 
+			</div>
+			<div id=prg_table>
+				<div class="time_index channel">
+					<div class="hour_name channel_name">
+						<div class="program_day"><%= DateTime.parse(day).strftime("%d") %>日</div>
+					</div>
+					<%(5...29).each{|e|
+					%><div class="hour" ><a name="hour_<%= e%24 %>"><%= e%24 %></a></div>
+					<%}%>
+				</div>
+
+				<%= programs_html %>
+			</div>
+		</div>
+	</body>
+</html>
+

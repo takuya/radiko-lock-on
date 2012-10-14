@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+require 'pp'
+require "open-uri"
+require "net/http"
+require 'openssl'
+require "optparse"
+$:.unshift File.expand_path(File.dirname(__FILE__)+"/../lib")
+require "radiko"
+
+
+radiko = Radiko.new
+radiko.auth
+channel     = nil
+time_length = nil
+output      = nil
+
+opt = OptionParser.new
+opt.on("-c channel_name","--channel","チャンネル"){|v| channel=v}
+opt.on("-t [1800]","--time","録音時間（指定なしは、1800秒"){|v| time_length=v}
+opt.on("-o [チャンネル名.flv]","--output","出力ファイル"){|v| output=v}
+opt.parse! ARGV
+
+output  = "#{channel}.flv" if output==nil
+unless channel
+  ARGV = ["--help"]
+  opt.parse! ARGV
+  exit
+end
+
+
+
+radiko.rec(channel,time_length,output)

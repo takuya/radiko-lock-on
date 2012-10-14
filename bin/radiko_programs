@@ -1,0 +1,52 @@
+#!/usr/bin/env ruby
+require 'pp'
+require "open-uri"
+require "net/http"
+require 'openssl'
+require "optparse"
+$:.unshift "../lib"
+require "radiko"
+
+
+
+
+
+dir = File.expand_path(File.dirname(File.expand_path(  __FILE__))+"/../log/programs")
+p dir
+opt = OptionParser.new
+opt.on("-d [#{dir}]","--output_dir","保存先"){|v| dir=v}
+opt.parse! ARGV
+
+unless File.exists? dir
+		ARGV = ["--help"]
+		opt.parse! ARGV
+		exit
+end
+
+
+
+
+
+
+radiko = Radiko.new
+radiko.auth
+
+
+
+prgs =  radiko.get_program
+
+dates = prgs.keys
+
+
+dates.each{|day|
+
+
+		Dir.chdir(dir){
+
+				open( "#{day}.xml","w" ){|f| 
+				f.write prgs[day]
+		}
+
+		}
+
+}

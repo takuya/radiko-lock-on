@@ -1,0 +1,19 @@
+RewriteEngine ON
+RewriteBase /radiko/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*) index.cgi/$1 [QSA,L]
+#AddHandler cgi-script  .cgi
+
+#Options Indexes MultiViews Includes +ExecCGI
+
+
+DirectoryIndex index.cgi
+AddHandler cgi-script .cgi
+Options Indexes MultiViews Includes +ExecCGI FollowSymLinks
+
+#SetEnv RUBYLIB /virtual/account/lib/site_ruby/1.8:/virtual/account/lib
+#SetEnv GEM_HOME /virtual/account/lib/ruby/gem
+
+
+
