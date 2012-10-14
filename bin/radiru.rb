@@ -1,4 +1,9 @@
 #!/usr/bin/env ruby
+# coding:utf-8
+# modified at 2012-10-14 
+# modifled by takuya_1st
+# contact  http://d.hatena.ne.jp
+# 
 
 playerurl   = "http://radiko.jp/player/swf/player_2.0.1.00.swf"
 playerfile  = "./player.swf"

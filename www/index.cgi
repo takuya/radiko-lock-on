@@ -1,4 +1,9 @@
 #!/usr/bin/ruby
+# coding:utf-8
+# modified at 2012-10-14 
+# modifled by takuya_1st
+# contact  http://d.hatena.ne.jp
+#
 require 'rubygems'
 require 'sinatra'
 

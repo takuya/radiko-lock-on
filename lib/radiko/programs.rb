@@ -1,4 +1,8 @@
 # ** coding:utf-8
+# modified at 2012-10-14 
+# modifled by takuya_1st
+# contact  http://d.hatena.ne.jp
+#
 $KCODE='u'
 require 'pp'
 require 'rubygems'
